@@ -7,36 +7,36 @@ class SWDB extends DataSource {
         this.db = db;
     }
 
-    async getWikis() {
-        return await this.db.sw.findDoc({});
+    async getAllDocs(table) {
+        return await this.db[table].findDoc({});
     }
 
-    async getWiki(name) {
-        const wiki = await this.db.sw.findDoc({ name: name });
-        return (wiki.length == 0 ? null : wiki[0]);
+    async getOneDoc(table, query) {
+        const doc = await this.db[table].findDoc(query);
+        return (doc.length == 0 ? null : doc[0]);
     }
 
-    async addWiki(wiki) {
-        return await this.db.saveDoc("sw", wiki);
+    async addDoc(table, doc) {
+        return await this.db[table].saveDoc(doc);
     }
 
-    async editWiki(wiki) {
-        const ok = await this.db.sw.updateDoc(wiki.id, wiki).then(data => {
+    async editDoc(table, id, doc) {
+        const ok = await this.db[table].updateDoc(id, doc).then(data => {
             if(data != null) {
                 return data;
             } else {
-                return new Error("item not found");
+                return new Error(`No document found for id: ${id} in table: ${table}`);
             }
         });
         return ok;
     }
 
-    async deleteWiki(id) {
-        const ok = await this.db.sw.destroy({ id: id }).then(data => {
+    async deleteDoc(table, id) {
+        const ok = await this.db[table].destroy({ id: id }).then(data => {
             if(data.length > 0) {
                 return { ok: true };
             } else {
-                return new Error("item not found");
+                return new Error(`No document found for id: ${id} in table: ${table}`);
             }
         });
 
