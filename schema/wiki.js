@@ -5,6 +5,7 @@ const schema = gql`
         id: ID!
         name: String!
         url(version: String): String!
+        created_at: DateTime
     }
 
     extend type Query {

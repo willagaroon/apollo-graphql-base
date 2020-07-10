@@ -1,10 +1,13 @@
 const { gql } = require("apollo-server-express");
 const fs = require("fs");
+const { DateTimeResolver } = require("graphql-scalars");
 
 const schemaArray = [];
 const resolversArray = [];
 
 const root = gql`
+    scalar DateTime
+
     type Query {
         root: String
     }
@@ -16,7 +19,12 @@ const root = gql`
     }
 `;
 
+const rootResolvers = {
+    DateTime: DateTimeResolver
+}
+
 schemaArray.push(root);
+resolversArray.push(rootResolvers);
 
 fs.readdirSync("./schema").forEach(function (file) {
     if (file != "index.js") {
